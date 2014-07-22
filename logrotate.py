@@ -19,6 +19,9 @@ def get_logfiles():
     actions = []
 
     for logrotate_config in logrotate_configs:
+        if not os.path.isfile(logrotate_config):
+            continue
+            
         log_files = []
         have_script = 0
         script = ""
@@ -117,7 +120,6 @@ if __name__ == "__main__":
                 call(["/usr/bin/gzip", "-f", "{0}/{1}".format(archive_path, logname)])
             except CalledProcessError as err:
                 print "Error gzipping logfile {0}: {1}".format(logfile, err)
-                continue
 
             if 'create' in action['create']:
                 with open(logfile, 'a'):
